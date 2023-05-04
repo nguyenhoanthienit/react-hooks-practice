@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.scss";
 import ColorBox from "./component/ColorBox";
 import TodoList from "./component/TodoList";
 import TodoForm from "./component/TodoForm";
+import PostList from "./component/PostList";
+import Pagination from "./component/Pagination";
+import queryString from "query-string";
+import PostFiltersForm from "./component/PostFiltersForm";
 
 function App() {
   const [todos, setToDos] = useState([
@@ -11,37 +15,97 @@ function App() {
     { id: 3, title: "test3" },
   ]);
 
+  const [postList, setPostList] = useState([]);
+
+  const [pagination, setPagination] = useState({
+    _page: 1,
+    _limit: 10,
+    _totalRow: 1,
+  });
+  const [filters, setFilters] = useState({
+    _limit: 10,
+    _page: 1,
+  });
+
+  useEffect(() => {
+    async function fetchPostList() {
+      try {
+        const paramString = queryString.stringify(filters);
+        const requestUrl =
+          `http://js-post-api.herokuapp.com/api/posts?${paramString}`;
+        const response = await fetch(requestUrl);
+        const reponseJson = await response.json();
+        console.log(reponseJson);
+
+        const { data, pagination } = reponseJson;
+        setPostList(data);
+        setPagination(pagination);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    console.log("from API");
+    fetchPostList();
+  }, [filters]);
+
+  useEffect(() => {
+    console.log("Todo app");
+  });
+
   function handleOnTodosListClick(todo) {
-    console.log(todo)
-    let idx = todos.findIndex(s => s.id === todo.id);
+    console.log(todo);
+    let idx = todos.findIndex((s) => s.id === todo.id);
     let newTodos = [...todos];
     newTodos.splice(idx, 1);
     setToDos(newTodos);
   }
 
   function handleJobClick() {
-    let newTodos = [...todos, {id: todos.length + 1, title: "test" + (todos.length + 1)}];
-    setToDos(newTodos)
+    let newTodos = [
+      ...todos,
+      { id: todos.length + 1, title: "test" + (todos.length + 1) },
+    ];
+    setToDos(newTodos);
   }
 
-  function handleTodoFormSubmit(formValues){
+  function handleTodoFormSubmit(formValues) {
     console.log(formValues);
 
     let newTodo = {
       id: todos.length + 1,
-      ...formValues
-    }
+      ...formValues,
+    };
     let newTodos = [...todos, newTodo];
     setToDos(newTodos);
   }
 
+  function handlePageChange(newPage) {
+    console.log(newPage);
+    setFilters({
+      ...filters,
+      _page: newPage
+    })
+  }
+
+  function handleFiltersChange(newFilters){
+    console.log(newFilters);
+    setFilters({
+      ...filters,
+      _page: 1,
+      title_like: newFilters.searchTerm
+    })
+  }
+
   return (
     <div className="app">
-      <ColorBox />
+      {/* <ColorBox />
 
       <button onClick={handleJobClick}>Add</button>
-      <TodoForm onSubmit={handleTodoFormSubmit}/>
-      <TodoList todos={todos} onTodoClick={handleOnTodosListClick}/>
+      <TodoForm onSubmit={handleTodoFormSubmit} />
+      <TodoList todos={todos} onTodoClick={handleOnTodosListClick} /> */}
+      <PostFiltersForm onSubmit={handleFiltersChange}/>
+      <PostList posts={postList} />
+      <Pagination pagination={pagination} onPageChange={handlePageChange} />
     </div>
   );
 }
