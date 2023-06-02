@@ -6,6 +6,7 @@ function Country() {
 
     return (
         <div>
+            <h1>Fetch Country API</h1>
             {data &&
                 data.slice(0, 5).map((country) => {
                     return <p key={country.alpha2Code}>Name: {country.name} - Population: {country.population}</p>;

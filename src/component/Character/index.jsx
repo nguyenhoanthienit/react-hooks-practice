@@ -17,7 +17,7 @@ function Character() {
     }, []);
 
     return (
-        <div>
+        <div style={{fontSize: "5em"}}>
             {character}
         </div>
     );
