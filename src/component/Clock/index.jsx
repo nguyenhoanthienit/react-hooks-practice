@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import useClock from '../../hooks/useClock';
 
-Clock.propTypes = {
-
-};
-
 function Clock() {
-    const { timeString } = useClock();
+    const {timeString} = useClock();
 
     return (
-        <h1>
-            {timeString}
-        </h1>
-    );
+        <div>
+            <div>
+                {timeString}
+            </div>
+        </div>
+    )
 }
 
 export default Clock;
