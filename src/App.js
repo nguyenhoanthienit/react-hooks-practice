@@ -11,19 +11,9 @@ import Country from "./component/Country";
 import Character from "./component/Character";
 
 function App() {
-  // const [count, setCount] = useState(0);
-
-  // const handleHeroClick = () => {};
-
   return (
     <div className="app">
-      {/* <p>{count}</p>
-      <button onClick={() => setCount(count + 1)}>Click</button>
-      <Hero name="test" onClick={handleHeroClick} />
-      <Counter /> */}
-      {/* <HelloWorld /> */}
-
-
+      
       <Character />
 
 
@@ -33,6 +23,7 @@ function App() {
 
       {/* <Clock /> */}
       {/* <BeautifulClock /> */}
+
     </div>
   );
 }
